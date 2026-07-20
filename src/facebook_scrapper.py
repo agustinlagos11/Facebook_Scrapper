@@ -53,7 +53,7 @@ def get_adaptive_wait_time(current_time, last_run_time=None):
     
     # Check recent activity to adjust timing
     try:
-        with open('data/kuensel_posts_master.json', 'r') as f:
+        with open('data/lihue_posts_master.json', 'r') as f:
             data = json.load(f)
             session_info = data.get('scraping_session', {})
             
@@ -105,7 +105,7 @@ class FacebookScraper:
             return {
                 "credentials": {"email": email, "password": password},
                 "scraping": {"headless": True, "max_scrolls": 15, "scroll_pause": 3, "target_count": 25},
-                "output": {"folder": "data/", "filename_prefix": "kuensel_posts"},
+                "output": {"folder": "data/", "filename_prefix": "lihue_posts"},
                 "download_images": False
             }
 
@@ -487,8 +487,8 @@ class FacebookScraper:
                 timestamp = time_elem.get('datetime', '') or time_elem.get_text(strip=True)
 
             # Author information
-            author = "Kuensel"  # Default for page posts
-            author_id = "kuensel"  # Default page ID
+            author = "lihue"  # Default for page posts
+            author_id = "lihue"  # Default page ID
 
             # Extract actual author if it's not a page post
             author_selectors = [
@@ -502,7 +502,7 @@ class FacebookScraper:
                 author_elem = post_element.select_one(selector)
                 if author_elem:
                     author_text = author_elem.get_text(strip=True)
-                    if author_text and author_text not in ["Kuensel", ""]:
+                    if author_text and author_text not in ["lihue", ""]:
                         author = author_text
                         break
 
@@ -553,7 +553,7 @@ class FacebookScraper:
             elif not process_photos:
                 print("📷 Photo processing disabled, skipping Facebook photo links")
 
-            # Fetch full article content if Kuensel links are found
+            # Fetch full article content if lihue links are found
             article_content, article_title = self.fetch_full_article_content(links)
 
             # Create proper title, description, and content
@@ -967,19 +967,19 @@ class FacebookScraper:
         return image_urls
 
     def fetch_full_article_content(self, links):
-        """Fetch full article content from Kuensel links"""
+        """Fetch full article content from lihue links"""
         full_content = ""
         full_title = ""
         
         try:
-            # Look for Kuensel links
-            kuensel_links = [link for link in links if 'kuenselonline.com' in link or 'kuensel.bt' in link]
+            # Look for lihue links
+            lihue_links = [link for link in links if 'lihueonline.com' in link or 'lihue.bt' in link]
             
-            if not kuensel_links:
+            if not lihue_links:
                 return full_content, full_title
             
-            # Take the first Kuensel link
-            article_url = kuensel_links[0]
+            # Take the first lihue link
+            article_url = lihue_links[0]
             print(f"Fetching full article from: {article_url}")
             
             # Set headers to mimic a browser
@@ -1405,7 +1405,7 @@ class FacebookScraper:
                 
         return unique_posts
 
-    def scrape_posts(self, page_url="https://www.facebook.com/Kuensel", target_count=None, max_scrolls=None, runtime_checker=None): # Fixed URL
+    def scrape_posts(self, page_url="https://www.facebook.com/lihue", target_count=None, max_scrolls=None, runtime_checker=None): # Fixed URL
         """Main scraping function - implements your 7-step process"""
         if target_count is None:
             target_count = self.config["scraping"]["target_count"]
@@ -1593,8 +1593,8 @@ class FacebookScraper:
                 "description": post.get("description", ""),
                 "content": post.get("content", ""),
                 "categoryID": post.get("categoryID", "general"),
-                "authorId": post.get("authorId", "kuensel"),
-                "AuthorName": post.get("authorName", "Kuensel"),
+                "authorId": post.get("authorId", "lihuebariggiamara"),
+                "AuthorName": post.get("authorName", "lihuebariggiamara"),
                 "attachment": post.get("attachment", {"images": [], "videos": [], "links": []}),
                 "createdAt": post.get("createdAt", datetime.now().isoformat()),
                 "publishAt": post.get("publishAt", datetime.now().isoformat())
@@ -1612,7 +1612,7 @@ class FacebookScraper:
 
     def save_posts_consolidated(self, new_posts):
         """Save posts to a single consolidated file, adding only new ones"""
-        consolidated_file = "data/kuensel_posts_master.json"
+        consolidated_file = "data/lihue_posts_master.json"
         
         # Load existing posts if file exists
         existing_posts = []
@@ -1918,7 +1918,7 @@ class FacebookScraper:
 
     def load_existing_posts(self):
         """Load existing post IDs from master file to avoid re-scraping"""
-        consolidated_file = "data/kuensel_posts_master.json"
+        consolidated_file = "data/lihue_posts_master.json"
         self.existing_post_ids = set()
         
         if os.path.exists(consolidated_file):
@@ -2024,7 +2024,7 @@ class FacebookScraper:
         
         # Create descriptive filename
         timestamp = datetime.now().strftime("%H%M%S")
-        filename = f"kuensel_{post_id}_img{img_index:02d}_{timestamp}.{ext}"
+        filename = f"lihue_{post_id}_img{img_index:02d}_{timestamp}.{ext}"
         
         return filename
         
@@ -2072,7 +2072,7 @@ def main():
 
     # Get initial post count for comparison
     try:
-        with open('data/kuensel_posts_master.json', 'r') as f:
+        with open('data/lihue_posts_master.json', 'r') as f:
             data = json.load(f)
             initial_post_count = len(data.get('posts', []))
     except (FileNotFoundError, json.JSONDecodeError) as e:
@@ -2080,7 +2080,7 @@ def main():
         initial_post_count = 0
 
     try:
-        print("Starting Kuensel Facebook scraper...")
+        print("Starting lihue Facebook scraper...")
         
         # Login to Facebook
         print("Logging in to Facebook...")
@@ -2102,10 +2102,10 @@ def main():
         with open(last_run_file, 'w') as f:
             f.write(current_time.isoformat())
 
-        # Scrape posts from Kuensel page
-        print("📄 Starting to scrape Kuensel Facebook page...")
+        # Scrape posts from lihue page
+        print("📄 Starting to scrape lihue Facebook page...")
         # Fixed URL (removed extra spaces) with runtime checker
-        posts = scraper.scrape_posts("https://www.facebook.com/Kuensel", runtime_checker=check_runtime)
+        posts = scraper.scrape_posts("https://www.facebook.com/lihuebariggiamara", runtime_checker=check_runtime)
 
         # Always format data, even if empty
         print("📋 Formatting data with required fields...")
@@ -2210,7 +2210,7 @@ def main():
             print("No valid posts found after formatting.")
         
         # Final verification that master file exists
-        master_file_path = "data/kuensel_posts_master.json"
+        master_file_path = "data/lihue_posts_master.json"
         if os.path.exists(master_file_path):
             print(f"✅ Master file confirmed at: {master_file_path}")
             file_size = os.path.getsize(master_file_path)
@@ -2258,7 +2258,7 @@ def main():
 
 def parse_arguments():
     """Parse command line arguments"""
-    parser = argparse.ArgumentParser(description='Facebook Scraper for Kuensel Posts')
+    parser = argparse.ArgumentParser(description='Facebook Scraper for lihue Posts')
     
     parser.add_argument('--max-posts', 
                         type=int, 
